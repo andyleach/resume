@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { copyText } from '@/lib/copy';
+import { RESUME_DOWNLOAD_NAME, RESUME_URL } from '@/lib/resume';
 
 const EMAIL = 'midge-rockery9c@icloud.com';
 
@@ -127,8 +128,8 @@ export function Contact() {
               </a>
               <span className="dot-sep" />
               <a
-                href="/resume.pdf"
-                download
+                href={RESUME_URL}
+                download={RESUME_DOWNLOAD_NAME}
                 className="transition-colors hover:text-[color:var(--color-fg)]"
               >
                 Resume (PDF)

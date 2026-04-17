@@ -22,6 +22,9 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   images: { unoptimized: true },
   pageExtensions: ['ts', 'tsx', 'mdx'],
+  env: {
+    NEXT_PUBLIC_BUILD_DATE: new Date().toISOString().slice(0, 10),
+  },
 };
 
 export default withMDX(nextConfig);

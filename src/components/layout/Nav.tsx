@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { RESUME_DOWNLOAD_NAME, RESUME_URL } from '@/lib/resume';
 import { ThemeToggle } from './ThemeToggle';
 import { Wordmark } from './Wordmark';
 
@@ -65,8 +66,8 @@ export function Nav() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <a
-            href="/resume.pdf"
-            download
+            href={RESUME_URL}
+            download={RESUME_DOWNLOAD_NAME}
             className="hidden h-9 items-center gap-2 rounded-md border border-[color:var(--color-rule)] bg-[color:var(--color-elevated)] px-3 text-sm font-medium text-[color:var(--color-fg)] transition-colors hover:border-[color:var(--color-accent-secondary)] sm:inline-flex"
           >
             Resume

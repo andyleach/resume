@@ -1,3 +1,4 @@
+import { RESUME_DOWNLOAD_NAME, RESUME_URL } from '@/lib/resume';
 import { Wordmark } from './Wordmark';
 
 export function Footer() {
@@ -28,8 +29,8 @@ export function Footer() {
             LinkedIn
           </a>
           <a
-            href="/resume.pdf"
-            download
+            href={RESUME_URL}
+            download={RESUME_DOWNLOAD_NAME}
             className="transition-colors hover:text-[color:var(--color-fg)]"
           >
             Resume
