@@ -1,0 +1,52 @@
+## Overview
+
+Business processes in Laravel apps sprawl. A state flag here, a job there, a listener somewhere else — nobody can reconstruct how an entity got to its current state. **Workflowable** collapses that into a single event-driven engine: workflows live as JSON, transitions are events, history is a first-class artifact.
+
+## Capabilities
+
+### JSON-defined workflows
+
+Describe states, transitions, and guards declaratively. Version them alongside your migrations.
+
+### Event-sourced audit trail
+
+Every transition emits an event. Replay the event stream to reconstruct any entity's state at any point in time.
+
+### Conditional transitions
+
+Guards are closures or invokables — arbitrary PHP with access to the entity and context.
+
+### Replayable state
+
+Debugging a "how did we get here" bug is `->replay()` away.
+
+## A workflow definition
+
+{/* TODO: paste the real workflow JSON + controller snippet from the package */}
+
+```json
+{
+  "name": "order_fulfillment",
+  "initial": "pending",
+  "states": ["pending", "shipped", "delivered", "cancelled"],
+  "transitions": [
+    { "from": "pending", "to": "shipped", "event": "ship" },
+    { "from": "shipped", "to": "delivered", "event": "deliver" },
+    { "from": "pending", "to": "cancelled", "event": "cancel" }
+  ]
+}
+```
+
+```php
+public function ship(Order $order): RedirectResponse
+{
+    $order->workflow('order_fulfillment')->dispatch('ship');
+    return back();
+}
+```
+
+## Architecture
+
+`Workflow` wraps a subject and a definition. A `Transition` writes to the event store and applies the resulting state. Reads hydrate from the store; writes append to it. Projections are optional — the event store is the source of truth.
+
+{/* TODO: insert architecture SVG */}

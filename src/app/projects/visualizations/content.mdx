@@ -1,0 +1,51 @@
+## Overview
+
+Every Laravel app eventually rebuilds tables and charts from scratch — column definitions, filters, sorting, pagination, rendering. **Visualizations** makes those first-class citizens of your domain model: a DataGrid or Chart is a PHP class with a query and columns, and rendering is someone else's problem.
+
+## Capabilities
+
+### Declarative DataGrids
+
+Subclass `DataGrid`, declare columns, point it at an Eloquent query. Filtering, sorting, and pagination come along automatically.
+
+### Chart classes
+
+Same idea for aggregations. Your controller hands back a chart class; the renderer decides whether that's Chart.js in Inertia or a blade partial.
+
+### Inertia & Blade rendering
+
+Bring your own stack. The package doesn't assume React, Vue, or Livewire.
+
+### Zero vendor lock-in
+
+MIT, Packagist-distributed, no SaaS behind it.
+
+## A DataGrid, start to finish
+
+{/* TODO: paste the real Visualizations example from the package README */}
+
+```php
+class OrdersGrid extends DataGrid
+{
+    protected function columns(): array
+    {
+        return [
+            Column::make('id')->sortable(),
+            Column::make('customer.name')->searchable(),
+            Column::make('total')->sortable()->format(fn ($o) => money($o->total)),
+            Column::make('created_at')->sortable()->label('Placed'),
+        ];
+    }
+
+    protected function query(): Builder
+    {
+        return Order::query()->with('customer');
+    }
+}
+```
+
+## Architecture
+
+`DataGrid` composes a `QueryBuilder` → `Paginator` → `Renderer`. Filters and sort order arrive as request params, get normalized, applied to the query, and handed off to the renderer. Every step is overridable; nothing is final.
+
+{/* TODO: insert the architecture SVG once drawn */}

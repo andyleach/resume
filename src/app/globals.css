@@ -1,0 +1,280 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* Settleup-style palette. Tokens are mode-agnostic names;
+     values are overridden for .dark below. Defaults are light mode. */
+  --color-bg: #ffffff;
+  --color-elevated: #fafafa;
+  --color-rule: #e4e4e7;
+
+  --color-fg: #18181b;
+  --color-secondary: #52525b;
+  --color-muted: #a1a1aa;
+
+  --color-accent: #0ea5e9;
+  --color-accent-text: #0284c7;
+  --color-accent-hover: #0369a1;
+  --color-accent-secondary: #10b981;
+  --color-accent-glow: rgba(14, 165, 233, 0.1);
+
+  --color-code-bg: #0b1120;
+  --color-code-fg: #e2e8f0;
+  --color-code-green: #059669;
+  --color-code-blue: #0284c7;
+  --color-code-pink: #db2777;
+  --color-code-orange: #ea580c;
+  --color-code-purple: #7c3aed;
+
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
+
+  --tracking-tightest: -0.03em;
+  --tracking-tighter: -0.02em;
+  --tracking-wide-label: 0.15em;
+}
+
+/* Dark mode: .dark is applied to <html> by the theme script */
+.dark {
+  --color-bg: #0f172a;
+  --color-elevated: #1e293b;
+  --color-rule: #334155;
+
+  --color-fg: #f1f5f9;
+  --color-secondary: #94a3b8;
+  --color-muted: #64748b;
+
+  --color-accent: #0ea5e9;
+  --color-accent-text: #38bdf8;
+  --color-accent-hover: #7dd3fc;
+  --color-accent-secondary: #10b981;
+  --color-accent-glow: rgba(14, 165, 233, 0.12);
+
+  --color-code-bg: #020617;
+  --color-code-fg: #e2e8f0;
+  --color-code-green: #34d399;
+  --color-code-blue: #38bdf8;
+  --color-code-pink: #f472b6;
+  --color-code-orange: #fb923c;
+  --color-code-purple: #c084fc;
+}
+
+@layer base {
+  html {
+    /* block the initial-paint flash; script sets class before hydration */
+    color-scheme: light dark;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  html,
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: #ffffff;
+  }
+
+  body {
+    font-feature-settings: 'ss01', 'ss02';
+  }
+
+  /* Shiki-highlighted code blocks should inherit the dark pre bg,
+     not the light chip styling used for inline <code>. */
+  pre code {
+    background: transparent !important;
+    color: inherit !important;
+    padding: 0 !important;
+  }
+  pre [data-line] {
+    display: block;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  .label-mono {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: var(--tracking-wide-label);
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .link-accent {
+    color: var(--color-accent-text);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+    transition: color 0.15s ease;
+  }
+  .link-accent:hover {
+    color: var(--color-accent-hover);
+  }
+
+  /* Brand gradient — sky → emerald, as settleup uses on key headings */
+  .text-gradient {
+    background: linear-gradient(90deg, var(--color-accent-secondary), var(--color-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .grain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.5'/></svg>");
+    mix-blend-mode: multiply;
+  }
+  .dark .grain {
+    mix-blend-mode: screen;
+    opacity: 0.04;
+  }
+
+  /* Settleup-style subtle grid background — fades from center outward */
+  .grid-bg {
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--color-fg) 5%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--color-fg) 5%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 20%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 20%, transparent 80%);
+  }
+
+  /* Radial glow behind hero content — sky + emerald blend */
+  .hero-glow {
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 30%, var(--color-accent-glow), transparent 70%),
+      radial-gradient(
+        ellipse 50% 40% at 80% 60%,
+        color-mix(in srgb, var(--color-accent-secondary) 10%, transparent),
+        transparent 70%
+      );
+    pointer-events: none;
+  }
+
+  /* Badge pill (above hero h1) */
+  .badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in srgb, var(--color-accent-secondary) 30%, transparent);
+    background: color-mix(in srgb, var(--color-accent-secondary) 12%, transparent);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-accent-secondary);
+  }
+
+  /* Primary CTA button — filled emerald with inset highlight + drop glow */
+  .cta-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2.75rem;
+    padding: 0 1.5rem;
+    border-radius: 9999px;
+    background: var(--color-accent-secondary);
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.15) inset,
+      0 8px 24px -8px rgba(16, 185, 129, 0.6);
+    transition: transform 0.15s ease;
+  }
+  .cta-primary:hover {
+    transform: scale(1.02);
+  }
+
+  /* Secondary CTA — outlined, elevated */
+  .cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2.75rem;
+    padding: 0 1.5rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-rule);
+    background: var(--color-elevated);
+    color: var(--color-fg);
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: border-color 0.15s ease;
+  }
+  .cta-secondary:hover {
+    border-color: var(--color-accent-secondary);
+  }
+
+  /* Card surface — used in OpenSource, experience, anywhere elevated */
+  .card-surface {
+    border: 1px solid var(--color-rule);
+    background: var(--color-elevated);
+    border-radius: 1rem;
+    transition:
+      box-shadow 0.3s ease,
+      border-color 0.3s ease,
+      transform 0.3s ease;
+  }
+  .card-surface:hover {
+    box-shadow:
+      0 0 0 1px var(--color-accent-secondary) inset,
+      0 24px 60px -24px rgba(16, 185, 129, 0.35);
+  }
+
+  /* Terminal-style install block */
+  .terminal-block {
+    border: 1px solid var(--color-rule);
+    background: var(--color-bg);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-secondary);
+  }
+  .terminal-block .prompt {
+    color: var(--color-muted);
+    user-select: none;
+  }
+
+  /* Dot separator pattern from settleup's trust row */
+  .dot-sep {
+    display: inline-block;
+    height: 0.25rem;
+    width: 0.25rem;
+    border-radius: 9999px;
+    background: var(--color-rule);
+  }
+}
