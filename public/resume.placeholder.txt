@@ -1,1 +1,0 @@
-Drop resume.pdf in the public/ folder. It will be served at /resume.pdf.
